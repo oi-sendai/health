@@ -4,6 +4,7 @@ var cors = require('cors');
 var app = express();
 var jwt = require('express-jwt');
 var dotenv = require('dotenv');
+var path = require('path');
 
 dotenv.load();
 
@@ -23,10 +24,12 @@ app.configure(function () {
   app.use('/secured', authenticate);
   app.use(cors());
 
-  app.use(app.router);
 
-  app.set('views', __dirname + '/client');
-  app.set('view engine', 'jade');
+  app.set('views', __dirname + '/client'); // set path for template engine
+  app.set('view engine', 'jade'); // set template engine
+  // app.use(express.static(__dirname+''));
+  app.use(express.static(path.join(__dirname, 'client'))); // set path for served assets
+  app.use(app.router); // this must come after static path above!!
 });
 
 app.get('/ping', function(req, res) {
